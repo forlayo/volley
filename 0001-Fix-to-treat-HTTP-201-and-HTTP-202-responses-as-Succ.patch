@@ -1,0 +1,27 @@
+From f7b8671a410a2cdc1ce34b190cd39009cf9ed7b6 Mon Sep 17 00:00:00 2001
+From: Miguel del Amor <forlayo@gmail.com>
+Date: Tue, 16 Jul 2013 13:35:28 +0200
+Subject: [PATCH 1/1] Fix to treat HTTP 201 and HTTP 202 responses as Success
+ instead of Error.
+
+---
+ src/com/android/volley/toolbox/BasicNetwork.java | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/volley/toolbox/BasicNetwork.java b/src/com/android/volley/toolbox/BasicNetwork.java
+index b3c7d45..006066a 100644
+--- a/src/com/android/volley/toolbox/BasicNetwork.java
++++ b/src/com/android/volley/toolbox/BasicNetwork.java
+@@ -106,7 +106,8 @@ public class BasicNetwork implements Network {
+                 long requestLifetime = SystemClock.elapsedRealtime() - requestStart;
+                 logSlowRequests(requestLifetime, request, responseContents, statusLine);
+ 
+-                if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_NO_CONTENT) {
++                if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_NO_CONTENT
++                        && statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_ACCEPTED) {
+                     throw new IOException();
+                 }
+                 return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
+-- 
+1.8.1.2
+
